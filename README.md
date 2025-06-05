@@ -19,10 +19,23 @@ This collector extends the standard Datadog Agent with additional OpenTelemetry 
 ```bash
 docker build . -t agent-ddot --no-cache \
   --build-arg AGENT_REPO="datadog/agent" \
-  --build-arg AGENT_VERSION="7.65.0-full" \
-  --build-arg AGENT_BRANCH="7.65.x"
+  --build-arg AGENT_VERSION="7.66.1-full" \
+  --build-arg AGENT_BRANCH="7.66.x"
 
 docker run -e DD_API_KEY=your_key -e DD_SITE=datadoghq.com agent-ddot
+```
+
+## Updating Dockerfile
+
+```bash
+AGENT_VERSION=7.66.1 # change this
+mv manifest.{yaml,yaml.bak}
+curl -o manifest.yaml https://raw.githubusercontent.com/DataDog/datadog-agent/refs/tags/$AGENT_VERSION/comp/otelcol/collector-contrib/impl/manifest.yaml
+curl -o Dockerfile https://raw.githubusercontent.com/DataDog/datadog-agent/refs/tags/$AGENT_VERSION/Dockerfiles/agent-ddot/Dockerfile.agent-otel
+
+# 1. Copy over custom items from manifest.yaml.bak into manifest.yaml
+# 2. Update custom items versions in manifest.yaml
+# 3. Delete manifest.yaml.bak
 ```
 
 ## Automated Builds
